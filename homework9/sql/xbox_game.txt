@@ -1,0 +1,31 @@
+CREATE TABLE developer (developer_id INTEGER PRIMARY KEY, name TEXT, phone INTEGER, email TEXT);
+
+
+CREATE TABLE games (
+    game_id INTEGER PRIMARY KEY,
+    game_name TEXT NOT NULL,
+    release INTEGER,
+    developer TEXT,
+    price INTEGER  NOT NULL,
+    FOREIGN KEY (developer) REFERENCES developer(developer_id)
+);
+
+
+INSERT INTO games (game_name, release, developer, price) VALUES ("Battlefield", 2017, 1, 15);
+
+INSERT INTO games (game_name, release, developer, price) VALUES ("GTA", 2021, 2, 50);
+
+INSERT INTO games (game_name, release, developer, price) VALUES ("Mortal Kombat", 2019, 3, 30);
+
+INSERT INTO games (game_name, release, developer, price) VALUES ("Resident Evil 2", 2019, 4, 40);
+
+INSERT INTO developer (name, phone, email) VALUES ("Rockstar Games", 3737373727, "rg@gmail.com");
+
+INSERT INTO developer (name, phone, email) VALUES ("EA", 3757373727, "ea@gmail.com");
+
+INSERT INTO developer (name, phone, email) VALUES ("NR Studios", 3757379727, "nr@gmail.com");
+
+INSERT INTO developer (name, phone, email) VALUES ("Capcom", 3457373727, "capcom@gmail.com");
+
+
+SELECT game_id, game_name, A.name, A.phone FROM games JOIN developer A WHERE games.game_id == A.developer_id;
