@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{one_game.name}}
+{% endblock %}
+
+{% block body %}
+<div class='container mt-5'>
+    <h1>Дополнительно об игре<h1>
+     
+    <div class="alert alert-info">
+        <h3>{{one_game.name }}</h3>
+        <h6><p><b>Цена: {{ one_game.price }}</b></p></h6>
+        <h6><p><b>Год выпуска: {{ one_game.year }}</b></p></h6>
+        <a href="/catalog/{{one_game.id}}/del" class="btn btn-danger">Удалить</a>
+
+    </div>
+
+</div>
+{% endblock %}
