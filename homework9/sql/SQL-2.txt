@@ -1,0 +1,183 @@
+Связь o2o
+
+CREATE TABLE owner
+(
+    Id SERIAL PRIMARY KEY,
+	FirstName TEXT NOT NULL,
+	LastName TEXT NOT NULL
+);
+CREATE TABLE flats
+(
+    Id SERIAL PRIMARY KEY,
+    street TEXT,
+    house_number INTEGER,
+	owner_id INTEGER UNIQUE NOT NULL,
+	FOREIGN KEY (owner_id) REFERENCES owner(ID)
+);
+
+INSERT INTO flats(street, house_number, owner_id) 
+VALUES ('Golubeva','40', 1);
+INSERT INTO flats(street, house_number, owner_id) 
+VALUES ('Pobediteley','20', 2);
+INSERT INTO flats(street, house_number, owner_id) 
+VALUES ('Pushkina','20', 3);
+
+
+
+Связь o2m
+CREATE TABLE authors(
+    id INTEGER PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL
+);
+
+CREATE TABLE books(
+    book_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    year INTEGER NOT NULL,
+    author_id INTEGER NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES authors(id)
+)
+
+INSERT INTO authors(id, first_name, last_name) VALUES (1,'Александр', 'Пушкин');
+INSERT INTO authors(id, first_name, last_name) VALUES (2,'Лев', 'Толстой'), (3,'Николай', 'Гоголь');
+
+
+INSERT INTO books (book_id, name, year, author_id) VALUES (1,'Евгений Онегин', 1833, 1), 
+(2,'Борис Годунов', 1831, 1),
+(3,'Война и мир', 1869, 2),
+(4,'Вий', 1831, 3);
+
+
+
+
+Связь m2m
+
+CREATE TABLE Games
+(
+    Id SERIAL PRIMARY KEY,
+	Game_name TEXT NOT NULL,
+    Game_release INTEGER,
+    Developer TEXT,
+    Price INTEGER  NOT NULL
+);
+CREATE TABLE Customers
+(
+    Id SERIAL PRIMARY KEY,
+	FirstName TEXT NOT NULL,
+	LastName TEXT NOT NULL
+);
+CREATE TABLE Orders
+(
+    Id SERIAL PRIMARY KEY,
+    GameId INTEGER NOT NULL REFERENCES Games(Id) ON DELETE CASCADE,
+    CustomerId INTEGER NOT NULL REFERENCES Customers(Id) ON DELETE CASCADE,
+    CreatedAt DATE NOT NULL,
+    GameCount INTEGER DEFAULT 1,
+    OrdersPrice NUMERIC NOT NULL
+);
+
+
+INSERT INTO Games (game_name, game_release, developer, price) 
+VALUES ('Battlefield', 2017, 'Rockstar', 30),
+('GTA', 2020, 'EA', 25),
+('Mortal Kombat', 2019, 'NR Studios', 20),
+('Resident Evil', 2019, 'Capcom', 40);
+  
+INSERT INTO Customers(firstname, lastname) 
+VALUES ('Tom','Ford'), ('Bob', 'Signal'),('Sam', 'Smith');
+
+INSERT INTO Customers(firstname, lastname) 
+VALUES ('Karl','Johnson');
+  
+INSERT INTO Orders(gameid, customerid, createdat, gamecount, ordersprice) 
+VALUES
+( 
+    (SELECT Id FROM Games WHERE game_name='GTA'), 
+    (SELECT Id FROM Customers WHERE FirstName='Tom'),
+    '2021-07-11',  
+    1, 
+    (SELECT price FROM games WHERE game_name='GTA')
+);
+INSERT INTO Orders(gameid, customerid, createdat, gamecount, ordersprice) 
+VALUES
+( 
+    (SELECT Id FROM Games WHERE game_name='Battlefield'), 
+    (SELECT Id FROM Customers WHERE FirstName='Bob'),
+    '2021-08-11',  
+    2, 
+    (SELECT price FROM games WHERE game_name='Battlefield')
+);
+INSERT INTO Orders(gameid, customerid, createdat, gamecount, ordersprice) 
+VALUES
+( 
+    (SELECT Id FROM Games WHERE game_name='Mortal Kombat'), 
+    (SELECT Id FROM Customers WHERE FirstName='Bob'),
+    '2021-08-11',  
+    2, 
+    (SELECT price FROM games WHERE game_name='Mortal Kombat')
+);
+INSERT INTO Orders(gameid, customerid, createdat, gamecount, ordersprice) 
+VALUES
+( 
+    (SELECT Id FROM Games WHERE game_name='Resident Evil'), 
+    (SELECT Id FROM Customers WHERE FirstName='Sam'),
+    '2021-08-11',  
+    3, 
+    (SELECT price FROM games WHERE game_name='Resident Evil')
+);
+
+
+
+
+SELECT * FROM orders, Customers
+WHERE orders.CustomerId = Customers.Id;
+
+SELECT Customers.FirstName, games.game_name, Orders.CreatedAt 
+FROM Orders, Customers, games
+WHERE Orders.CustomerId = Customers.Id AND Orders.gameid=games.Id;
+
+
+
+
+JOIN
+
+1) inner join
+
+SELECT Orders.CreatedAt, Orders.gamecount, games.game_name 
+FROM Orders
+JOIN games ON games.Id = Orders.gameid;
+
+2)left join
+
+SELECT FirstName FROM Customers
+LEFT JOIN Orders ON Customers.Id = Orders.CustomerId
+WHERE Orders.CustomerId IS NULL;
+
+3) right join
+
+SELECT FirstName, CreatedAt, gamecount, ordersprice, gameid 
+FROM Orders RIGHT JOIN Customers 
+ON Orders.CustomerId = Customers.Id;
+
+4)  full
+
+SELECT FirstName, CreatedAt, gamecount, ordersprice, gameid 
+FROM Orders FULL JOIN Customers 
+ON Orders.CustomerId = Customers.Id;
+
+5) cross 
+
+SELECT * FROM Orders CROSS JOIN Customers;
+
+
+
+Подзапрос с функцией:
+
+SELECT *
+FROM games
+WHERE price = (SELECT MIN(price) FROM games);
+SELECT *
+FROM games
+WHERE price > (SELECT AVG(price) FROM games);
+
