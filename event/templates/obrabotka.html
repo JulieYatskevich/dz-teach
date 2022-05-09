@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Главная страница
+{% endblock%}
+
+
+{% block body %}
+<p class="lead mb-0"><a href="#" class="text-white fw-bold">Мастер-класс по обработке фото</a></p>
+        <form method="post">
+          <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Введите имя"><br>
+          <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Введите фамилию"></textarea><br>
+          <input type="text" name="phone" id="phone" class="form-control" placeholder="Введите телефон" ></textarea><br>
+          <input type="submit" class="btn btn-success" value="Записаться">
+        </form>
+{% endblock%}
