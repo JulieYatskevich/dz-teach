@@ -1,0 +1,45 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Мой блог{% endblock %}
+
+{% block content %}
+  <div class="features">
+    <h1>Мой блог</h1>
+    {% for note in post %}
+      <div class='alert alert-warning'>
+        <h3>{{ note.title }}</h3>
+        <p>{{ note.text }}</p>
+        <p>{{ note.date }}</p>
+      </div>
+    {% endfor %}
+    
+  </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+{% comment %} <!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Блог</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    {% for note in post %}
+      <div class='alert alert-warning'>
+        <h3>{{ note.title }}</h3>
+        <p>{{ note.text }}</p>
+        <p>{{ note.date }}</p>
+      </div>
+    {% endfor %} {% endcomment %}
+
+
+
+
