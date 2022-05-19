@@ -1,0 +1,22 @@
+
+{% block content %}
+
+{% for masterclass in masterclasses %}
+<div>
+    <p><b>Name:</b> {{ masterclass.name }}</p>
+
+    {% if masterclass.participants.all() %}
+        <p>Guests:</p>
+        <ul>
+            {% for participant in masterclass.participants.all() %}
+            <li>{{ participant.first_name }} {{ participant.last_name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <button type="button"><a href="/masterclasses/{{ masterclass.id }}">Open<a></button>
+    <hr>
+</div>
+{% endfor %}
+
+{% endblock %}
